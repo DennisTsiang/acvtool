@@ -153,6 +153,12 @@ def save_package_indexhtml(class_group, templates, output_dir, app_name, granula
         rows.append(Markup(row))
         total_coverage_data.add_data(coverage_data)
     total_coverage = total_coverage_data.get_formatted_coverage(granularity)
+    if app_name == package_name:
+        print ("Total Coverage: " + total_coverage)
+        path = (output_dir + "/total_coverage.txt").replace('\\', '/')
+        print ("saving total coverage value to: " + path)
+        with open(path, "w") as f:
+            f.write(total_coverage)
     table = init_table(rows=Markup("\n".join(rows)),
                         total_coverage=total_coverage,
                         is_instruction_level=Granularity.is_instruction(granularity),

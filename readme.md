@@ -21,6 +21,9 @@
 
     When successfully installed, you will be able to execute `acv -h`. This command will create the working directory "\~/acvtool" and the configuration file "\~/acvtool/config.json". 
 
+    To uninstall go to `/usr/local/lib/python2.7/dist-packages` and remove the `acvtool.egg-link`. Also remove the egg link folder from the installed directory too.
+    Also try running `sudo python setup.py develop --uninstall`
+
 2. Specify absolute paths to the Android tools at "~/acvtool/config.json" (%userprofile%\acvtool\config.json in Windows) for the following variables.
     * AAPT
     * ZIPALIGN

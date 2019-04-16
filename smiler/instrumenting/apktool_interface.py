@@ -24,6 +24,7 @@ class ApktoolInterface:
     
     def _runApktoolCommand(self, commandString):
         cmd = "%s %s -jar %s" % (self.javaPath, self.javaOpts, commandString)
+        print (cmd)
         return commander.runOnce(cmd)
 
     def _interpResultsDecodeCmd(self, returnCode, cmdOutput):
@@ -34,7 +35,7 @@ class ApktoolInterface:
         return (True, output)
     
     
-    def decode(self, apkPath, dirToDecompile, quiet=True, noSrc=False, noRes=False, debug=True, noDebugInfo=False, force=True, frameworkTag="", frameworkDir="", keepBrokenRes=True):
+    def decode(self, apkPath, dirToDecompile, quiet=True, noSrc=False, noRes=False, debug=True, noDebugInfo=False, force=True, frameworkTag="", frameworkDir="", keepBrokenRes=True, forceManifest=True):
         options = "decode"
         if noSrc:
             options += " --no-src"
@@ -49,15 +50,17 @@ class ApktoolInterface:
         if frameworkTag:
             options += " --frame-tag '%s'" % frameworkTag
         if frameworkDir:
-            options += " --frame-path '%s'" % frameworkDir  
+            options += " --frame-path '%s'" % frameworkDir
         if keepBrokenRes:
-            options += " --keep-broken-res" 
-        
+            options += " --keep-broken-res"
+        if forceManifest:
+            options += " --force-manifest"
+
         options = "%s -o %s %s" % (options, dirToDecompile, apkPath)
         cmd = self._previewApktoolCommand(options, quiet)
         (returnCode, cmdOutput) = self._runApktoolCommand(cmd)
         return self._interpResultsDecodeCmd(returnCode, cmdOutput)
-    
+
 
     def _interpResultsBuildCmd(self, returnCode, outputStr):
         retCode = "Return code is: %s" % returnCode

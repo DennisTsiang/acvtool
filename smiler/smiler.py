@@ -226,7 +226,8 @@ def decompile_apk(apktool, apk_path, package, result_dir):
                                         force = True, #directory exist so without this this process finishes
                                         frameworkTag = "",
                                         frameworkDir = "",
-                                        keepBrokenRes = False)
+                                        keepBrokenRes = False,
+                                        forceManifest = True)
 
     if not run_successful:
         print("Run is not successful!")

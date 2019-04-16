@@ -67,7 +67,10 @@ def save_html_report(output_dir, smalitree, app_name, granularity):
     class_template = templates['class.pt']
 
     for cl in smalitree.classes:
-        save_class(cl, class_template, output_dir, app_name, granularity)
+        try:
+            save_class(cl, class_template, output_dir, app_name, granularity)
+        except:
+            pass
 
     save_coverage(smalitree, templates, output_dir, app_name, granularity)
 
@@ -81,6 +84,7 @@ def save_coverage(tree, templates, output_dir, app_name, granularity):
     total_coverage_data = CoverageData()
     for g in groups:
         (package, path, coverage_data) = save_package_indexhtml(g, templates, output_dir, app_name, granularity)
+        path = "".join([i if ord(i) < 128 else '' for i in path]);
         coverage = coverage_data.get_formatted_coverage(granularity)
         row = init_row(elementlink=path, type='package', elementname=package,
                   coverage=coverage,
@@ -88,6 +92,7 @@ def save_coverage(tree, templates, output_dir, app_name, granularity):
                   is_instruction_level=Granularity.is_instruction(granularity),
                   progress_covered=coverage_data.covered(granularity),
                   progress_missed=coverage_data.missed(granularity))
+        row = "".join([i if ord(i) < 128 else '' for i in row]);
         rows.append(Markup(row))
         total_coverage_data.add_data(coverage_data)
     total_coverage = total_coverage_data.get_formatted_coverage(granularity)
@@ -103,7 +108,7 @@ def save_coverage(tree, templates, output_dir, app_name, granularity):
     path = os.path.join(output_dir, 'index.html')
     with open(path, 'w') as f:
         f.write(html)
-    
+
 def calculate_coverage(coveredlines, alllines):
     if alllines == 0:
         return None
@@ -126,7 +131,9 @@ def save_package_indexhtml(class_group, templates, output_dir, app_name, granula
     rows = []
     for cl in class_group:
         elementlink = os.path.join(root_path, folder, cl.file_name + '.html').replace('\\', '/')
+        elementlink = "".join([i if ord(i) < 128 else '' for i in elementlink]);
         elementname = cl.file_name
+        elementname = "".join([i if ord(i) < 128 else '' for i in elementname]);
         coverage_data = CoverageData(
             lines=cl.coverable(),
             lines_missed=cl.not_covered(),
@@ -247,7 +254,12 @@ def save_class(cl, class_template, output_dir, app_name, granularity):
     respath = ''
     for i in range(slash_num):
         respath += '../'
-    html = class_template(code=Markup("\n".join(buf)), appname=app_name, title=cl.file_name, 
+    code = "\n".join(buf)
+    code = "".join([i if ord(i) < 128 else '' for i in code]);
+    codeFile = open("code.txt", "w")
+    codeFile.write(code)
+    codeMarkup = Markup(code)
+    html = class_template(code=codeMarkup, appname=app_name, title=cl.file_name,
                           package=Utils2.get_standart_package_name(cl.name), respath=respath,
                           granularity=Granularity.get(granularity))
     with open(class_path, 'w') as f:

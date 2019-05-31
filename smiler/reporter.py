@@ -158,7 +158,7 @@ def save_package_indexhtml(class_group, templates, output_dir, app_name, granula
         path = (output_dir + "/total_coverage.txt").replace('\\', '/')
         print ("saving total coverage value to: " + path)
         with open(path, "w") as f:
-            f.write(total_coverage)
+            f.write(total_coverage.replace('%',''))
     table = init_table(rows=Markup("\n".join(rows)),
                         total_coverage=total_coverage,
                         is_instruction_level=Granularity.is_instruction(granularity),
